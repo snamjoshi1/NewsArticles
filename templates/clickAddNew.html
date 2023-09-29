@@ -17,6 +17,7 @@
                 <th>News Date</th>
                 <th>News Headline</th>
                 <th>News Description</th>
+                <th>Relevance By Model</th>
                 <th>Status</th>
             </tr>
             {% for job in jobs %}
@@ -27,6 +28,7 @@
                   <td>{{job['Date']}}</td>
                   <td>{{job['headline']}}</td>
                   <td>{{job['article_text']}}</td>
+                  <td>{{job['RelevanceByModel']}}</td>
                   <td>{{job['status']}}</td>
               </tr>
             {% endfor %}

@@ -18,6 +18,7 @@
                 <th>News Date</th>
                 <th>News Headline</th>
                 <th>News Description</th>
+                <th>Relevance By Model</th>
                 <th>Mark as Relevant or Irrelevant</th>
             </tr>
             {% for job in jobs %}
@@ -28,6 +29,7 @@
                   <td>{{job['Date']}}</td>
                   <td>{{job['headline']}}</td>
                   <td>{{job['article_text']}}</td>
+                  <td>{{job['RelevanceByModel']}}</td>
                   <td>
                   <div class="form-check">
         <input class="form-check-input" type="checkbox" name='check1' value="Relevant" id="flexCheckDefault" >Relevant
