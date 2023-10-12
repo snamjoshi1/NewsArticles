@@ -41,6 +41,7 @@ def hello_world():
 def savedData():
   if request.method == 'POST':
     values = request.form.getlist('check1')
+    print(values)
     for i in range(len(values)):
       json_obj[i]['status'] = values[i]
       print(json_obj)
@@ -80,11 +81,24 @@ def final():
 def submit():
   if request.method == 'POST':
     df = pd.DataFrame(json_obj)
-    df = df[df['status'] == 'Relevant']
+    print(df)
+    df1 = df[df['status'] == 'Relevant']
+    df2 = df[df['status'] == 'Irrelevant']
+    df3 = df[df['status'] == 'Relevant but Not Considered']
+    df4 = df[df['status'] == 'Relevant but duplicate']
     print(df)
     todayDate = datetime.now().strftime('%b%d%Y')
     fileName = 'Relevant' + str(todayDate) + '.xlsx'
-    df.to_excel(fileName)
+    df1.to_excel(fileName)
+    print(df2)
+    fileName = 'Irrelevant' + str(todayDate) + '.xlsx'
+    df2.to_excel(fileName)
+    print(df3)
+    fileName = 'RelevantButNC' + str(todayDate) + '.xlsx'
+    df3.to_excel(fileName)
+    print(df4)
+    fileName = 'RelevantButDup' + str(todayDate) + '.xlsx'
+    df4.to_excel(fileName)
   return "Submitted Successfully"
 
 
