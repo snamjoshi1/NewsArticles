@@ -1,40 +1,36 @@
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 import pandas as pd
+import glob
 
 app = Flask(__name__)
+path = "./StatusFolder"
+submitCounter = 0
 
-News = [
-  {
-    'id': 1,
-    'link': 'economictimes.com',
-    'headline': '360 One raises funds',
-    'description': 'The management raised 4B$',
-    'date': 'Aug 18 2023'
-  },
-  {
-    'id': 2,
-    'link': 'livemint.com',
-    'headline': 'IIFL One raises funds',
-    'description': 'The management raised 4B$',
-    'date': 'Aug 17 2023'
-  },
-]
-
-articles = pd.read_excel('TestData123.xlsx')
-json_obj = articles.to_dict(orient='records')
-print(json_obj)
+try:
+  articles = pd.read_excel('TestData123.xlsx')
+  json_obj = articles.to_dict(orient='records')
+  print(json_obj)
+  counter = int(json_obj[-1]['id'])
+except:
+  json_obj = {}
 
 statusUpdate = []
 relevantList = []
 newNews = []
 df = pd.DataFrame()
-counter = int(json_obj[-1]['id'])
 
 
 @app.route("/")
 def hello_world():
-  return render_template('home.html', jobs=json_obj)
+  if submitCounter == 0:
+    if len(json_obj) > 0:
+      return render_template('home.html', jobs=json_obj)
+    else:
+      return render_template('error.html')
+  else:
+    print('Value of Submit Counter:', submitCounter)
+    return render_template('error.html')
 
 
 @app.route("/saveData", methods=['POST'])
@@ -88,18 +84,20 @@ def submit():
     df4 = df[df['status'] == 'Relevant but duplicate']
     print(df)
     todayDate = datetime.now().strftime('%b%d%Y')
-    fileName = 'Relevant' + str(todayDate) + '.xlsx'
+    fileName = './StatusFolder/Relevant' + str(todayDate) + '.xlsx'
     df1.to_excel(fileName)
     print(df2)
-    fileName = 'Irrelevant' + str(todayDate) + '.xlsx'
+    fileName = './StatusFolder/Irrelevant' + str(todayDate) + '.xlsx'
     df2.to_excel(fileName)
     print(df3)
-    fileName = 'RelevantButNC' + str(todayDate) + '.xlsx'
+    fileName = './StatusFolder/RelevantButNC' + str(todayDate) + '.xlsx'
     df3.to_excel(fileName)
     print(df4)
-    fileName = 'RelevantButDup' + str(todayDate) + '.xlsx'
+    fileName = './StatusFolder/RelevantButDup' + str(todayDate) + '.xlsx'
     df4.to_excel(fileName)
-  return "Submitted Successfully"
+    global submitCounter
+    submitCounter += 1
+  return render_template('message.html')
 
 
 if __name__ == "__main__":
